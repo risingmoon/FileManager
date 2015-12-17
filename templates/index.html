@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>TEST</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <ul id="filelist"></ul>
+  <script type="text/template" id="fileTemplate">
+<a id="<%= id %>" href="<%= href %>">
+  <%= content %>
+</a>
+  </script>
+  <script src="/static/jquery-2.1.4.js"></script>
+  <script src="/static/underscore.js"></script>
+  <script src="/static/backbone.js"></script>
+  <script src="/static/script.js"></script>
+  <script>$(function() { new app.AppView();});</script>
+</body>
+</html>
