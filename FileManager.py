@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response, render_template
+from flask import Flask, jsonify, Response, render_template, send_file, request
 import json
 import posixpath
 import os
@@ -18,10 +18,16 @@ def api(path):
         response=json.dumps(list_directory(path),indent=2),
         mimetype="application/json")
 
+
 @app.route('/', defaults={'path':''})
 @app.route('/<path:path>')
 def index(path):
-    return render_template('index.html')
+    fullpath = ROOT + path
+    filetype = request.args.get('type')
+    if filetype:
+        return send_file(fullpath, mimetype='text/plain')
+    else:
+        return render_template('index.html')
 
 
 def list_directory(filepath):
