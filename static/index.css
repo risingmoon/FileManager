@@ -1,0 +1,14 @@
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+li.file:before {
+    content: "\e022";
+    font-family: 'Glyphicons Halflings';
+
+}
+li.folder-close:before {
+    content: "\e117";
+    font-family: 'Glyphicons Halflings';
+
+}
