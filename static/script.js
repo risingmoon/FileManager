@@ -96,7 +96,7 @@ app.FileView = app.ContentView.extend({
 });
 
 app.AppView = Backbone.View.extend({
-  el: 'body',
+  el: 'div#browser',
 
   initialize: function() {
     this.$el.append('<ul></ul>');

@@ -3,6 +3,7 @@
 # Capabilities
 - Navigate around files
 - Open files as text/plain
+- Filetree
 
 # Goals
 
@@ -10,5 +11,5 @@
 - Add routing
 
 ## FileTree
-- Add new leaves (files/folder) to folder tree
+- Fix leaves bugs
 - Hide leaves (files/folder) in folder tree

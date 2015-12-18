@@ -14,6 +14,10 @@ from functools import update_wrapper
 @app.route('/folder/', defaults={'path': ''})
 @app.route('/folder/<path:path>')
 def folder(path):
+    if request.args.get('type'):
+        return Response(
+            response=json.dumps(grouped_directory(path),indent=2),
+            mimetype="application/json")
     return Response(
         response=json.dumps(list_directory(path),indent=2),
         mimetype="application/json")
@@ -50,6 +54,33 @@ def list_directory(filepath):
             "path": fullname 
         })
     return directory 
+
+def grouped_directory(filepath):
+    fullfilepath = ROOT + filepath
+    data = {
+        "directories": [],
+        "files": []
+    }
+    try:
+        contents  = os.listdir(fullfilepath)
+    except os.error:
+        return None
+    contents.sort(key=lambda a: a.lower())
+    for name in contents:
+        filename = os.path.join(filepath, name)
+        # Append / for directories or @ for symbolic links
+        filepathname = ROOT + filepath + name
+        fullname= filename
+        if os.path.isdir(filepathname):
+            fullname += "/"
+            data["directories"].append({"path": fullname})
+        elif os.path.islink(filepathname):
+            fullname += "@"
+        else:
+            data["files"].append({"path": fullname})
+
+    return data
+
 
 if __name__ == "__main__":
     app.run(debug=True)
