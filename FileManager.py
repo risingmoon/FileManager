@@ -4,7 +4,7 @@ import posixpath
 import os
 
 app = Flask(__name__)
-ROOT = "/home/justin/"
+ROOT = "/opt/pokemon/alfresco/"
 
 from datetime import timedelta
 from flask import make_response, request, current_app
@@ -83,4 +83,4 @@ def grouped_directory(filepath):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

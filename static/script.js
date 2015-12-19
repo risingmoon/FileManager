@@ -17,19 +17,25 @@ app.Content = Backbone.Model.extend({
     path: ''
   }
 });
-app.ContentsList = Backbone.Collection.extend({
+app.ContentCollection = Backbone.Collection.extend({
   model: app.Content,
+  url: "/folder/"
 });
 
-app.Contents = new app.ContentsList();
 app.ContentView = Backbone.View.extend({
   tagName: 'li',
   template: _.template( $('#fileTemplate').html() ),
-  render: function(){
+  events: {
+    'click': 'toggle'
+  },
+  toggle: function() {
+    this.$('span').toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
+  },
+  render: function() {
     var path = this.model.get('path');
-    var parts = path.split('/');
-    var name = path.endsWith('/') ? parts[parts.length-2] + '/': parts.pop() 
-    this.$el.html(this.template({
+    var name = path;
+    this.$el.html('<span class="glyphicon glyphicon-folder-open"></span>');
+    this.$el.append(this.template({
       id: path,
       href: 'http://' + window.location.host + '/#/' + path,
       content: name
@@ -38,90 +44,21 @@ app.ContentView = Backbone.View.extend({
   }
 });
 
-app.FolderView = app.ContentView.extend({
-  className: 'folder-close',
-  events: {
-    'click': 'openFolder'
-  },
-  openFolder: function(){
-    this.$el.append('<ul></ul>');
-    this.$filelist = this.$('ul');
-    this.collection = new app.ContentsList();
-    this.collection.url = '/folder/' + this.model.get('path')
-    this.collection.fetch();
-    //this.render();
-
-    this.listenTo( this.collection, 'add', this.renderContent );
-    this.listenTo( this.collection, 'reset', this.renderFolder );
-    console.log(this.collection.url);
-  },
-  renderFolder: function() {
-    this.$filelist.show();
-    this.collection.each(function( item ) {
-      this.renderContent( item );
-      }, this );
-  },
-
-  renderContent: function( item ) {
-    var contentView = item.get('path').endsWith('/') ? app.FolderView : app.FileView;
-    this.$filelist.append( new contentView({model:item}).render().el);
-  },
-
-  render: function(){
-    var path = this.model.get('path');
-    var parts = path.split('/');
-    var name = parts[parts.length-2] + '/' 
-    this.$el.html(this.template({
-      id: path,
-      href: 'http://' + window.location.host + '#folder/' + path,
-      content: name
-    }));
-    return this;
-  }
-});
-
-app.FileView = app.ContentView.extend({
-  className: "file",
-  render: function(){
-    var path = this.model.get('path');
-    var parts = path.split('/');
-    var name = parts[parts.length-1] 
-    this.$el.html(this.template({
-      id: path,
-      href: 'http://' + window.location.host + '#file/' +  path, 
-      content: name
-    }));
-    return this;
-  }
-});
-
-app.AppView = Backbone.View.extend({
-  el: 'div#browser',
-
+app.ContentsView = Backbone.View.extend({
   initialize: function() {
-    this.$el.append('<ul></ul>');
-    this.$filelist = this.$('ul');
-    this.collection = new app.ContentsList();
-    this.collection.url = '/folder/';
-    //this.collection.url = '/folder' + window.location.pathname;
+    this.collection = new app.ContentCollection();
     this.collection.fetch();
-    this.render();
-
-    this.listenTo( this.collection, 'add', this.renderContent );
-    this.listenTo( this.collection, 'reset', this.render );
+    this.listenTo(this.collection, 'add', this.renderContent);
+    this.listenTo(this.collection, 'reset', this.render);
   },
-
+  tagName: 'ul',
   render: function() {
-    this.$filelist.show();
-    this.collection.each(function( item ) {
-      this.renderContent( item );
-      }, this );
+    this.collection.each(function(item){
+      this.renderContent(item);
+    }, this);
   },
-
-  renderContent: function( item ) {
-    var contentView = item.get('path').endsWith('/') ? app.FolderView : app.FileView;
-    this.$filelist.append( new contentView({model:item}).render().el);
+  renderContent: function(item) {
+    this.$el.append(new app.ContentView({model:item}).render().el);
   }
-
 });
 
