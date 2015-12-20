@@ -52,7 +52,8 @@ def list_directory(filepath):
         if os.path.islink(filepathname):
             fullname += "@"
         directory.append({
-            "id": fullname 
+            "id": fullname,
+            "name": name
         })
     return directory 
 

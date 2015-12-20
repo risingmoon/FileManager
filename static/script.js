@@ -13,10 +13,13 @@ var Router = new app.Router();
 Backbone.history.start();
 
 //File Model
-app.File = Backbone.Model.extend({});
+app.File = Backbone.Model.extend({
+});
 
-//File Collection
-app.Files = Backbone.Collection.extend({});
+//Folder Collection
+app.Folder = Backbone.Collection.extend({
+  model: app.File
+});
 
 //File View
 app.FileView = Backbone.View.extend({
@@ -26,9 +29,23 @@ app.FileView = Backbone.View.extend({
   tagName: 'li',
   model: app.File,
   template: _.template( $('#fileTemplate').html() ),
-  
   className : function() {
     return this.model.get('id').endsWith('/') ? 'folder': 'file'
+  },
+  events: {
+    'click': 'toggle'
+  },
+  toggle: function (e) {
+    e.stopPropagation();
+    if( !this.folder) {
+      console.log("Add collection");
+      this.folder = new app.FolderView({model: this.model});
+      this.$el.append(this.folder.render().el);
+    } else {
+      this.$el.children('ul').toggle();
+    }
+    this.$el.children('span')
+	.toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
   },
   intialize: function() {
     this.listenTo(this.model, 'change', this.render);
@@ -37,8 +54,8 @@ app.FileView = Backbone.View.extend({
     this.$el.html(this.template({
       id: this.model.get('id'),
       href: '#',
-      file: this.model.get('id'),
-      type: this.className()
+      file: this.model.get('name'),
+      folder: this.className() === 'folder'
     }));
     return this;
   }
@@ -47,14 +64,12 @@ app.FileView = Backbone.View.extend({
 //Folder View
 app.FolderView = Backbone.View.extend({
   tagName: 'ul',
-  intialize: function() {
+  initialize: function() {
+    this.collection = new app.Folder();
+    this.collection.url = "/folder/" + this.model.get('id');
     this.collection.fetch();
-  },
-  events: {
-    'click li.folder': 'toggle'
-  },
-  toggle: function () {
-    this.$('span').toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
+    this.listenTo(this.collection, 'add', this.renderFile);
+    this.listenTo(this.collection, 'reset', this.render);
   },
   renderFile: function(file) {
     this.$el.append( new app.FileView({model: file}).render().el );  

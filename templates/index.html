@@ -8,7 +8,7 @@
   <link href="static/css/bootstrap.css" rel="stylesheet">
   <link href="static/index.css" rel="stylesheet">
   <script type="text/template" id="fileTemplate">
-<span class="<% if ( type === 'folder') { %>glyphicon glyphicon-folder-close<% } else { %>glyphicon glyphicon-file<% } %>"></span>
+<span class="<%= folder ? 'glyphicon glyphicon-folder-close' : 'glyphicon glyphicon-file' %>"></span>
 <a href="<%= href %>">
   <%= file %>
 </a>
@@ -20,9 +20,10 @@
 </head>
 <body>
 <script>
-var root = new app.File({id: "/"});
-var files = new app.Files([root]);
-var rootView = new app.Folder({collection:files});
+var file = new app.File({id: ""});
+//var files = new app.Files([root]);
+//var rootView = new app.FolderView({collection:files});
+var rootView = new app.FolderView({model: file});
 $('body').html(rootView.render().el);
 </script>
 </body>
