@@ -4,7 +4,8 @@ import posixpath
 import os
 
 app = Flask(__name__)
-ROOT = "/opt/pokemon/alfresco/"
+#ROOT = "/opt/pokemon/alfresco/"
+ROOT = "/home/justin/"
 
 from datetime import timedelta
 from flask import make_response, request, current_app
@@ -51,7 +52,7 @@ def list_directory(filepath):
         if os.path.islink(filepathname):
             fullname += "@"
         directory.append({
-            "path": fullname 
+            "id": fullname 
         })
     return directory 
 

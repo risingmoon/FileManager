@@ -8,8 +8,9 @@
   <link href="static/css/bootstrap.css" rel="stylesheet">
   <link href="static/index.css" rel="stylesheet">
   <script type="text/template" id="fileTemplate">
-<a id="<%= id %>" href="<%= href %>">
-  <%= content %>
+<span class="<% if ( type === 'folder') { %>glyphicon glyphicon-folder-close<% } else { %>glyphicon glyphicon-file<% } %>"></span>
+<a href="<%= href %>">
+  <%= file %>
 </a>
   </script>
   <script src="/static/jquery-2.1.4.js"></script>
@@ -18,6 +19,11 @@
   <script src="/static/script.js"></script>
 </head>
 <body>
-  <ul><li id="root" class="folder closed">/</li></ul>
+<script>
+var root = new app.File({id: "/"});
+var files = new app.Files([root]);
+var rootView = new app.Folder({collection:files});
+$('body').html(rootView.render().el);
+</script>
 </body>
 </html>

@@ -12,53 +12,57 @@ app.Router = Backbone.Router.extend({
 var Router = new app.Router();
 Backbone.history.start();
 
-app.Content = Backbone.Model.extend({
-  defaults: {
-    path: ''
-  }
-});
-app.ContentCollection = Backbone.Collection.extend({
-  model: app.Content,
-  url: "/folder/"
-});
+//File Model
+app.File = Backbone.Model.extend({});
 
-app.ContentView = Backbone.View.extend({
-  tagName: 'li',
-  template: _.template( $('#fileTemplate').html() ),
-  events: {
-    'click': 'toggle'
+//File Collection
+app.Files = Backbone.Collection.extend({});
+
+//File View
+app.FileView = Backbone.View.extend({
+  id: function() {
+    return this.model.get('id');
   },
-  toggle: function() {
-    this.$('span').toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
+  tagName: 'li',
+  model: app.File,
+  template: _.template( $('#fileTemplate').html() ),
+  
+  className : function() {
+    return this.model.get('id').endsWith('/') ? 'folder': 'file'
+  },
+  intialize: function() {
+    this.listenTo(this.model, 'change', this.render);
   },
   render: function() {
-    var path = this.model.get('path');
-    var name = path;
-    this.$el.html('<span class="glyphicon glyphicon-folder-open"></span>');
-    this.$el.append(this.template({
-      id: path,
-      href: 'http://' + window.location.host + '/#/' + path,
-      content: name
+    this.$el.html(this.template({
+      id: this.model.get('id'),
+      href: '#',
+      file: this.model.get('id'),
+      type: this.className()
     }));
     return this;
   }
 });
 
-app.ContentsView = Backbone.View.extend({
-  initialize: function() {
-    this.collection = new app.ContentCollection();
-    this.collection.fetch();
-    this.listenTo(this.collection, 'add', this.renderContent);
-    this.listenTo(this.collection, 'reset', this.render);
-  },
+//Folder View
+app.FolderView = Backbone.View.extend({
   tagName: 'ul',
-  render: function() {
-    this.collection.each(function(item){
-      this.renderContent(item);
-    }, this);
+  intialize: function() {
+    this.collection.fetch();
   },
-  renderContent: function(item) {
-    this.$el.append(new app.ContentView({model:item}).render().el);
+  events: {
+    'click li.folder': 'toggle'
+  },
+  toggle: function () {
+    this.$('span').toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
+  },
+  renderFile: function(file) {
+    this.$el.append( new app.FileView({model: file}).render().el );  
+  },
+  render:function() {
+    this.collection.each(function(file) {
+      this.renderFile(file);
+    },this);
+   return this;
   }
 });
-
