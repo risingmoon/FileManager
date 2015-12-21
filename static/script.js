@@ -4,6 +4,10 @@ app.Router = Backbone.Router.extend({
   routes: {
     //"folder/*path": "folder",
     //"file/*path": "file"
+    "*path": "list",
+  },
+  list: function(path){
+     console.log(path);
   },
   folder: function(path) {console.log("FOLDER:" + path);},
   file: function(path) {console.log("FILE:" + path);}
@@ -11,6 +15,13 @@ app.Router = Backbone.Router.extend({
 
 var Router = new app.Router();
 Backbone.history.start();
+app.Lists = Backbone.Model.extend({
+  urlRoot: "/lists",
+  defaults:{
+    "files" : [],
+    "folders" : []
+  },
+});
 
 //File Model
 app.File = Backbone.Model.extend({
