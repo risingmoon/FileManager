@@ -33,7 +33,7 @@ app.FileView = Backbone.View.extend({
     return this.model.get('id').endsWith('/') ? 'folder': 'file'
   },
   events: {
-    'click': 'toggle'
+    'click span': 'toggle',
   },
   toggle: function (e) {
     e.stopPropagation();
@@ -44,7 +44,7 @@ app.FileView = Backbone.View.extend({
     } else {
       this.$el.children('ul').toggle();
     }
-    this.$el.children('span')
+    this.$('a span')
 	.toggleClass("glyphicon glyphicon-folder-open glyphicon glyphicon-folder-close");
   },
   intialize: function() {
@@ -53,7 +53,7 @@ app.FileView = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template({
       id: this.model.get('id'),
-      href: '#',
+      href: '#' + this.model.get('id'),
       file: this.model.get('name'),
       folder: this.className() === 'folder'
     }));

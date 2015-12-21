@@ -8,10 +8,10 @@
   <link href="static/css/bootstrap.css" rel="stylesheet">
   <link href="static/index.css" rel="stylesheet">
   <script type="text/template" id="fileTemplate">
+<a href="#">
 <span class="<%= folder ? 'glyphicon glyphicon-folder-close' : 'glyphicon glyphicon-file' %>"></span>
-<a href="<%= href %>">
-  <%= file %>
 </a>
+<a href="<%= href %>" class=".folder"> <%= file %> </a>
   </script>
   <script src="/static/jquery-2.1.4.js"></script>
   <script src="/static/underscore.js"></script>
