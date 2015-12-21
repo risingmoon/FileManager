@@ -19,12 +19,33 @@
   <script src="/static/script.js"></script>
 </head>
 <body>
+  <div class="container">
+    <div class="row">
+      <div id="browser" class="col-sm-6"></div>
+      <div id="viewer" class="col-sm-6">
+        <table class="table">
+          <caption>Folders</caption>
+  	  <thead><tr><th>Name</th></tr> </thead>
+  	  <tbody>
+	    <tr><td></td></tr>
+	  </tbody>
+        </table>
+        <table class="table">
+          <caption>Files</caption>
+  	  <thead><tr><th>Name</th></tr></thead>
+  	  <tbody>
+	    <tr><td></td></tr>
+	  </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 <script>
 var file = new app.File({id: ""});
 //var files = new app.Files([root]);
 //var rootView = new app.FolderView({collection:files});
 var rootView = new app.FolderView({model: file});
-$('body').html(rootView.render().el);
+$('#browser').html(rootView.render().el);
 </script>
 </body>
 </html>
