@@ -8,10 +8,12 @@
   <link href="static/css/bootstrap.css" rel="stylesheet">
   <link href="static/index.css" rel="stylesheet">
   <script type="text/template" id="fileTemplate">
-<a href="#">
-<span class="<%= folder ? 'glyphicon glyphicon-folder-close' : 'glyphicon glyphicon-file' %>"></span>
-</a>
-<a href="<%= href %>" class=".folder"> <%= file %> </a>
+<span class="glyphicon glyphicon-file"></span>
+<a href="<%= href %>"><%= name %></a>
+  </script>
+  <script type="text/template" id="folderTemplate">
+<span class="glyphicon glyphicon-folder-close"></span>
+<a href="<%= href %>"><%= name %></a>
   </script>
   <script src="/static/jquery-2.1.4.js"></script>
   <script src="/static/underscore.js"></script>
@@ -21,31 +23,13 @@
 <body>
   <div class="container">
     <div class="row">
-      <div id="browser" class="col-sm-6"></div>
-      <div id="viewer" class="col-sm-6">
-        <table class="table">
-          <caption>Folders</caption>
-  	  <thead><tr><th>Name</th></tr> </thead>
-  	  <tbody>
-	    <tr><td></td></tr>
-	  </tbody>
-        </table>
-        <table class="table">
-          <caption>Files</caption>
-  	  <thead><tr><th>Name</th></tr></thead>
-  	  <tbody>
-	    <tr><td></td></tr>
-	  </tbody>
-        </table>
-      </div>
-    </div>
+      <div id="browser" class="col-sm-6"></div></div>
   </div>
 <script>
-var file = new app.File({id: ""});
-//var files = new app.Files([root]);
-//var rootView = new app.FolderView({collection:files});
-var rootView = new app.FolderView({model: file});
-$('#browser').html(rootView.render().el);
+var app = app || {};
+app.root = new app.Folder({id: '/'});
+app.rootView = new app.FoldersView({model: app.root});
+$('#browser').html( app.rootView.el);
 </script>
 </body>
 </html>
